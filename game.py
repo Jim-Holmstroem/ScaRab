@@ -2,16 +2,27 @@ from __future__ import division, print_function
 
 import pygame
 
+from Level import Level
 from rendering import Renderer
 
 class Game(object):
     def __init__(
         self,
-        player_name='Player'
+        player_name='Player',
+        level=None,
+        render=False,
     ):
         self.player_name = player_name
         pygame.init()
-        self.renderer = Renderer()
+        if level is None:
+            self.level = self.generate_level()
+        else:
+            selv.level = level
+        if render:
+            self.renderer = Renderer()
+
+    def generate_level(self):
+        return Level()
 
     def main_loop(self):
         done = False
@@ -24,7 +35,8 @@ class Game(object):
                 if event.type == pygame.MOUSEBUTTONUP:
                     print('hej')
 
-            self.renderer.render()
+            if hasattr(self, 'renderer'):
+                self.renderer.render()
             clock.tick(60)
         
         pygame.quit()
