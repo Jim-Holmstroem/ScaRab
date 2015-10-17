@@ -3,14 +3,14 @@ from __future__ import division, print_function
 import pygame
 
 from Level import Level
-from rendering import Renderer
+from rendering import Renderer, MapRenderer
 
 class Game(object):
     def __init__(
         self,
         player_name='Player',
         level=None,
-        render=False,
+        renderer=None,
     ):
         self.player_name = player_name
         pygame.init()
@@ -18,8 +18,8 @@ class Game(object):
             self.level = self.generate_level()
         else:
             selv.level = level
-        if render:
-            self.renderer = Renderer()
+        if renderer is not None:
+            self.renderer = renderer
 
     def generate_level(self):
         return Level()
@@ -36,12 +36,12 @@ class Game(object):
                     print('hej')
 
             if hasattr(self, 'renderer'):
-                self.renderer.render()
+                self.renderer.render(self.level)
             clock.tick(60)
         
         pygame.quit()
 
 
 if __name__ == '__main__':
-    game = Game()
+    game = Game(renderer=MapRenderer())
     game.main_loop()

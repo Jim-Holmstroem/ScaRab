@@ -1,8 +1,12 @@
 from __future__ import division, print_function
+
 import numpy as np
 
+from rendering import Renderer
+
 class Node(object):
-    def __init__(self):
+    def __init__(self, color=Renderer.BLACK):
+        self.color = color
         self.openings = {}
 
     def __repr__(self):
@@ -18,7 +22,7 @@ class Node(object):
 
 class Level(object):
     def __init__(self):
-        self.nodes = np.array([[Node(),Node()],[Node(),Node()]])
+        self.nodes = np.array([[Node(),Node(Renderer.WHITE)],[Node(),Node()]])
         self._make_connections()
 
     def _make_connections(self):
