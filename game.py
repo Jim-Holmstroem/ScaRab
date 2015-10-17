@@ -13,6 +13,8 @@ class Game(object):
         renderer=None,
     ):
         self.player_name = player_name
+        self.player_pos = (0, 0)
+        self.player_dir = (0, 1)
         pygame.init()
         if level is None:
             self.level = self.generate_level()
@@ -20,6 +22,11 @@ class Game(object):
             selv.level = level
         if renderer is not None:
             self.renderer = renderer
+
+    def _move_player(self, vector):
+        dx, dy = vector
+        x, y = self.player_pos
+        self.player_pos = (x + dx, y+dy)
 
     def generate_level(self):
         return Level()
