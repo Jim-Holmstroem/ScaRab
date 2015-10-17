@@ -3,15 +3,18 @@ import numpy as np
 
 class Node(object):
     def __init__(self):
-        self.openings = []
+        self.openings = {}
 
     def __repr__(self):
-        if len(self.openings) == 0:
-            repr_string = 'empty'
-        else:
-            vectors = zip(*self.openings)[1]
-            repr_string = str(vectors)
-        return repr_string
+        return 'node'
+
+#    def __repr__(self):
+#        if len(self.openings) == 0:
+#            repr_string = 'empty'
+#        else:
+#            vectors = self.openings.keys()
+#            repr_string = str(vectors)
+#        return repr_string
 
 class Level(object):
     def __init__(self):
@@ -23,6 +26,14 @@ class Level(object):
             (0, 1),
             (1, 1)
         )
+        self._make_pairwise_connection(
+            (0, 0),
+            (0, 1)
+        )
+        self._make_pairwise_connection(
+            (1, 0),
+            (1, 1)
+        )
 
     def _make_pairwise_connection(
         self,
@@ -31,11 +42,12 @@ class Level(object):
     ):
         node1 = self.nodes[coord1]
         node2 = self.nodes[coord2]
-        vector = np.array(coord1) - np.array(coord2)
+        vector = tuple(np.array(coord1) - np.array(coord2))
+        neg_vector = tuple(np.array(coord2) - np.array(coord1))
 
-        node1.openings.append((node2, -vector))
-        node2.openings.append((node1, vector))
-        import ipdb; ipdb.set_trace()
+        node1.openings[neg_vector] = node2
+        node2.openings[vector] = node1
+
 
     def display_level(self):
         print(self.nodes)
