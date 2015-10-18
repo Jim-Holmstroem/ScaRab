@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 
 import numpy as np
-
+import random
 from rendering import Renderer
 
 class Node(object):
@@ -24,6 +24,14 @@ class Level(object):
     def __init__(self):
         self.nodes = np.array([[Node(),Node(Renderer.WHITE)],[Node(),Node()]])
         self._make_connections()
+    
+    def make_random_connection(self,node):
+    wall_directions = node.walls.keys()
+    random.shuffle(wall_directions)
+    for dir in wall_directions:
+        if not node.walls[dir].openings:
+            make_pairwise_connection(node.coord,node.walls[dir].coord)
+            make_random_connection(node.neighbors[dir])
 
     def _make_connections(self):
         self._make_pairwise_connection(
