@@ -28,10 +28,10 @@ class Level(object):
     def make_random_connection(self,node):
         wall_directions = node.walls.keys()
         random.shuffle(wall_directions)
-        for dir in wall_directions:
-            if not node.walls[dir].openings:
-                make_pairwise_connection(node.coord,node.walls[dir].coord)
-                make_random_connection(node.neighbors[dir])
+        for direction in wall_directions:
+            if not node.walls[direction].openings:
+                make_pairwise_connection(node.coord,node.walls[direction].coord)
+                make_random_connection(node.neighbors[direction])
 
     def _make_connections(self):
         self._make_pairwise_connection(
