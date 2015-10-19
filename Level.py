@@ -5,10 +5,11 @@ import random
 from rendering import Renderer
 
 class Node(object):
-    def __init__(self, color=Renderer.BLACK):
+    def __init__(self, color=Renderer.BLACK, coords=(None,None)):
         self.color = color
         self.openings = {}
         self.walls = {}
+        self.coords = coords
 
     def __repr__(self):
         return 'node'
@@ -22,11 +23,14 @@ class Node(object):
 #        return repr_string
 
 class Level(object):
-    def __init__(self):
-        self.nodes = np.array([[Node(),Node(Renderer.WHITE)],[Node(),Node()]])
-        self._make_connections()
+    def __init__(self, size=(2,2):
+        self.nodes = np.empty(size,dtype=object)
+        for index,_ in np.ndenumerate(self.nodes):
+            self.nodes[index]=Node(coords=index)
+        self._set_inner_walls()
+        self._make_random_connections(self.nodes[(0,0)])
     
-    def set_inner_walls(self):
+    def _set_inner_walls(self):
         for index,node in np.ndenumerate(self.nodes):
             array_index=np.array(index)
             for direction in [(1,0),(-1,0),(0,1),(0,-1)]:
@@ -34,13 +38,13 @@ class Level(object):
                     neighbor_index = tuple(array_index+direction)
                     node.walls[direction]=self.nodes[neighbor_index]
     
-    def make_random_connection(self,node):
+    def _make_random_connections(self,node):
         wall_directions = node.walls.keys()
         random.shuffle(wall_directions)
         for direction in wall_directions:
             if not node.walls[direction].openings:
                 make_pairwise_connection(node.coord,node.walls[direction].coord)
-                make_random_connection(node.neighbors[direction])
+                _make_random_connections(node.neighbors[direction])
 
     def _make_connections(self):
         self._make_pairwise_connection(
