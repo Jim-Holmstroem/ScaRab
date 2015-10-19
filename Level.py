@@ -8,6 +8,7 @@ class Node(object):
     def __init__(self, color=Renderer.BLACK):
         self.color = color
         self.openings = {}
+        self.walls = {}
 
     def __repr__(self):
         return 'node'
@@ -24,6 +25,14 @@ class Level(object):
     def __init__(self):
         self.nodes = np.array([[Node(),Node(Renderer.WHITE)],[Node(),Node()]])
         self._make_connections()
+    
+    def set_inner_walls(self):
+        for index,node in np.ndenumerate(self.nodes):
+            array_index=np.array(index)
+            for direction in [(1,0),(-1,0),(0,1),(0,-1)]:
+                if all(array_index+direction<=(0,0)) and all(array_index+direction<self.nodes.shape):
+                    neighbor_index = tuple(array_index+direction)
+                    node.walls[direction]=self.nodes[neighbor_index]
     
     def make_random_connection(self,node):
         wall_directions = node.walls.keys()
