@@ -13,7 +13,7 @@ class Node(object):
 
     def __repr__(self):
         arrows = {(1,0):"v",(-1,0):"^",(0,1):">",(0,-1):"<"}
-        repr_string="N({})".format("".join([arrows[opening] for opening in self.openings]))
+        repr_string="N({})".format("".join([arrows[opening] for opening in self.openings.keys()]))
         return repr_string
 
 #    def __repr__(self):
