@@ -6,11 +6,11 @@ from rendering import Renderer
 
 
 class Node(object):
-    def __init__(self, color=Renderer.BLACK, coords=(None, None)):
+    def __init__(self, color=Renderer.BLACK, coord=(None, None)):
         self.color = color
         self.openings = {}
         self.walls = {}
-        self.coords = coords
+        self.coord = coord
 
     def __repr__(self):
         arrows = {(1, 0): "v", (-1, 0): "^", (0, 1): ">", (0, -1): "<"}
@@ -22,7 +22,7 @@ class Level(object):
     def __init__(self, size=(2, 2)):
         self.nodes = np.empty(size, dtype=object)
         for index, _ in np.ndenumerate(self.nodes):
-            self.nodes[index] = Node(coords=index)
+            self.nodes[index] = Node(coord=index)
         self._set_inner_walls()
         self._make_random_connections(self.nodes[(0, 0)])
     
@@ -30,7 +30,7 @@ class Level(object):
         for index, node in np.ndenumerate(self.nodes):
             array_index = np.array(index)
             for direction in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-                if all(array_index+direction <= (0, 0)) and all(array_index+direction < self.nodes.shape):
+                if all(array_index+direction >= (0, 0)) and all(array_index+direction < self.nodes.shape):
                     neighbor_index = tuple(array_index+direction)
                     node.walls[direction] = self.nodes[neighbor_index]
     
@@ -39,8 +39,9 @@ class Level(object):
         random.shuffle(wall_directions)
         for direction in wall_directions:
             if not node.walls[direction].openings:
+                next_node = node.walls[direction]
                 self._make_pairwise_connection(node.coord, node.walls[direction].coord)
-                self._make_random_connections(node.neighbors[direction])
+                self._make_random_connections(next_node)
 
     def _make_connections(self):
         self._make_pairwise_connection(
