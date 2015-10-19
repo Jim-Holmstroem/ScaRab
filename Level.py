@@ -12,7 +12,9 @@ class Node(object):
         self.coords = coords
 
     def __repr__(self):
-        return 'node'
+        arrows = {(1,0):"v",(-1,0):"^",(0,1):">",(0,-1):"<"}
+        repr_string="N({})".format("".join([arrows[opening] for opening in self.openings]))
+        return repr_string
 
 #    def __repr__(self):
 #        if len(self.openings) == 0:
@@ -72,6 +74,8 @@ class Level(object):
 
         node1.openings[neg_vector] = node2
         node2.openings[vector] = node1
+        del node1.walls[neg_vector]
+        del node2.walls[vector]
 
 
     def display_level(self):
