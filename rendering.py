@@ -6,6 +6,7 @@ from abc import ABCMeta, abstractmethod
 
 import pygame
 
+
 class Renderer(object):
     __metaclass__ = ABCMeta
 
@@ -23,32 +24,51 @@ class Renderer(object):
     def render(self, level):
         pass
 
+
 class PlayerViewRenderer(Renderer):
     def render(self, level):
         self.screen.fill(self.RED)
         pygame.display.flip()
 
+
 class MapRenderer(Renderer):
     def render(self, level):
-        draw_indices = np.array([
-            [(200, 200), (300, 200)],
-            [(200, 300), (300, 300)]
-        ])
-        self.screen.fill(self.RED)
-        for (x, y), node in np.ndenumerate(level.nodes):
-            for dx, dy in node.openings.keys():
+        node_width=40
+        self.screen.fill(self.WHITE)
+        pygame.draw.lines(
+            self.screen,
+            self.BLACK,
+            True,
+            [(40,40),
+             (node_width*level.size[0]+40,40),
+             (node_width*level.size[0]+40, node_width*level.size[1]+40),
+             (40,node_width*level.size[1]+40)
+             ],
+            10
+        )
+        for (y, x), node in np.ndenumerate(level.nodes):
+            print(node.walls.keys())
+            for direction in node.walls.keys():
+                if direction == (1, 0):
+                    start_pos = (x, y+1)
+                    end_pos = (x+1, y+1)
+                elif direction == (-1, 0):
+                    start_pos = (x, y)
+                    end_pos = (x+1, y)
+                elif direction == (0, 1):
+                    start_pos = (x+1, y)
+                    end_pos = (x+1, y+1)
+                elif direction == (0, -1):
+                    start_pos = (x, y)
+                    end_pos = (x, y+1)
+                start_pix = tuple(40+node_width * np.array(start_pos))
+                end_pix = tuple(40+node_width * np.array(end_pos))
+                print(start_pix,end_pix)
                 pygame.draw.line(
                     self.screen,
                     self.BLACK,
-                    draw_indices[x][y],
-                    draw_indices[x+dx][y+dy],
+                    start_pix,
+                    end_pix,
                     10
                 )
-            pygame.draw.circle(
-                self.screen,
-                node.color,
-                draw_indices[x][y],
-                15
-            )
-
         pygame.display.flip()

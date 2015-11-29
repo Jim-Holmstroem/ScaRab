@@ -20,6 +20,7 @@ class Node(object):
 
 class Level(object):
     def __init__(self, size=(2, 2)):
+        self.size = size
         self.nodes = np.empty(size, dtype=object)
         for index, _ in np.ndenumerate(self.nodes):
             self.nodes[index] = Node(coord=index)
@@ -30,7 +31,7 @@ class Level(object):
         for index, node in np.ndenumerate(self.nodes):
             array_index = np.array(index)
             for direction in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-                if all(array_index+direction >= (0, 0)) and all(array_index+direction < self.nodes.shape):
+                if all((array_index+direction) >= (0, 0)) and all((array_index+direction) < self.nodes.shape):
                     neighbor_index = tuple(array_index+direction)
                     node.walls[direction] = self.nodes[neighbor_index]
     
